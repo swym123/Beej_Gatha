@@ -2,13 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './styles.css'
 
-function App() {
-  return (
-    <div>
-      <h1>Beej Gatha</h1>
-    </div>
-  )
-}
+import App from './components/App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
