@@ -61,6 +61,16 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+html,
+body,
+#root {
+
+  margin: 0;
+  padding: 0;
+  background: #0d1208;
+  min-height: 100%;
+  overflow-x: hidden;
+}
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

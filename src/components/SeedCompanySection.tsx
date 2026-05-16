@@ -83,24 +83,23 @@ const CARDS_DATA = [
 ];
 
 const STEPS = [
-  { n: "01", label: "Seed Selection",  phase: "Selection"    },
-  { n: "02", label: "Lab Testing",     phase: "Lab Testing"  },
-  { n: "03", label: "Field Trials",    phase: "Field Trials" },
-  { n: "04", label: "Processing",      phase: "Processing"   },
-  { n: "05", label: "Delivery to You", phase: "Delivery"     },
+  { n: "01", label: "Seed Selection", phase: "Selection" },
+  { n: "02", label: "Lab Testing", phase: "Lab Testing" },
+  { n: "03", label: "Field Trials", phase: "Field Trials" },
+  { n: "04", label: "Processing", phase: "Processing" },
+  { n: "05", label: "Delivery to You", phase: "Delivery" },
 ];
 
 const N = CARDS_DATA.length;
 const DEPTHS = [0.018, 0.025, 0.015, 0.022, 0.02];
 
 /* ─────────────────────────────────────────
-   SCRIPT LOADER  (loads once, resolves on repeat calls)
+   SCRIPT LOADER
 ───────────────────────────────────────── */
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) {
-      // Script tag exists — wait for it to finish if still loading
       if ((window as any).gsap && src.includes("gsap.min")) { resolve(); return; }
       if ((window as any).ScrollTrigger && src.includes("ScrollTrigger")) { resolve(); return; }
       existing.addEventListener("load", () => resolve());
@@ -110,7 +109,7 @@ function loadScript(src: string): Promise<void> {
     const s = document.createElement("script");
     s.src = src;
     s.async = false;
-    s.onload  = () => resolve();
+    s.onload = () => resolve();
     s.onerror = () => reject(new Error(`Failed to load: ${src}`));
     document.head.appendChild(s);
   });
@@ -120,34 +119,31 @@ function loadScript(src: string): Promise<void> {
    COMPONENT
 ───────────────────────────────────────── */
 export default function SeedCompanySection() {
-  const cursorRef  = useRef<HTMLDivElement>(null);
-  const ringRef    = useRef<HTMLDivElement>(null);
-  const flashRef   = useRef<HTMLDivElement>(null);
-  const pBarRef    = useRef<HTMLDivElement>(null);
-  const hintRef    = useRef<HTMLDivElement>(null);
-  const phLabelRef = useRef<HTMLSpanElement>(null);
-  const spacerRef  = useRef<HTMLDivElement>(null);  // ← outer scroll-height container
-  const stageRef   = useRef<HTMLDivElement>(null);
-  const heroRef    = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const flashRef = useRef<HTMLDivElement>(null);
+  const pBarRef = useRef<HTMLDivElement>(null);
+  const hintRef = useRef<HTMLDivElement>(null);
+  const spacerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
 
-  const dotRefs  = useRef<Array<HTMLDivElement   | null>>(Array(N).fill(null));
-  const stepRefs = useRef<Array<HTMLDivElement   | null>>(Array(N).fill(null));
-  const cardRefs = useRef<Array<HTMLDivElement   | null>>(Array(N).fill(null));
-  const infoRefs = useRef<Array<HTMLDivElement   | null>>(Array(N).fill(null));
-  const imgRefs  = useRef<Array<HTMLImageElement | null>>(Array(N).fill(null));
+  const stepRefs = useRef<Array<HTMLDivElement | null>>(Array(N).fill(null));
+  const cardRefs = useRef<Array<HTMLDivElement | null>>(Array(N).fill(null));
+  const infoRefs = useRef<Array<HTMLDivElement | null>>(Array(N).fill(null));
+  const imgRefs = useRef<Array<HTMLImageElement | null>>(Array(N).fill(null));
 
   useEffect(() => {
     let dead = false;
     const disposers: Array<() => void> = [];
 
     (async () => {
-      /* ── Load GSAP in order ── */
       await loadScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js");
       await loadScript("https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js");
       if (dead) return;
 
-      const gsap: any          = (window as any).gsap;
+      const gsap: any = (window as any).gsap;
       const ScrollTrigger: any = (window as any).ScrollTrigger;
       gsap.registerPlugin(ScrollTrigger);
 
@@ -155,14 +151,14 @@ export default function SeedCompanySection() {
 
       /* ══ CURSOR (desktop only) ══ */
       if (!isMobile()) {
-        const cur  = cursorRef.current;
+        const cur = cursorRef.current;
         const ring = ringRef.current;
         if (cur && ring) {
           let mx = 0, my = 0, rx = 0, ry = 0;
           const onMM = (e: MouseEvent) => {
             mx = e.clientX; my = e.clientY;
             cur.style.left = mx + "px";
-            cur.style.top  = my + "px";
+            cur.style.top = my + "px";
           };
           document.addEventListener("mousemove", onMM);
           disposers.push(() => document.removeEventListener("mousemove", onMM));
@@ -172,7 +168,7 @@ export default function SeedCompanySection() {
             rx += (mx - rx) * 0.1;
             ry += (my - ry) * 0.1;
             ring.style.left = rx + "px";
-            ring.style.top  = ry + "px";
+            ring.style.top = ry + "px";
             craf = requestAnimationFrame(animRing);
           };
           craf = requestAnimationFrame(animRing);
@@ -181,7 +177,7 @@ export default function SeedCompanySection() {
           cardRefs.current.forEach(c => {
             if (!c) return;
             const enter = () => { cur.style.width = "16px"; cur.style.height = "16px"; ring.style.width = "56px"; ring.style.height = "56px"; };
-            const leave = () => { cur.style.width =  "9px"; cur.style.height =  "9px"; ring.style.width = "38px"; ring.style.height = "38px"; };
+            const leave = () => { cur.style.width = "9px"; cur.style.height = "9px"; ring.style.width = "38px"; ring.style.height = "38px"; };
             c.addEventListener("mouseenter", enter);
             c.addEventListener("mouseleave", leave);
             disposers.push(() => { c.removeEventListener("mouseenter", enter); c.removeEventListener("mouseleave", leave); });
@@ -192,22 +188,19 @@ export default function SeedCompanySection() {
       if (isMobile()) return;
 
       /* ══ DESKTOP ENGINE ══ */
-      // Grab DOM nodes — bail early if any are missing (SSR / unmount race)
-      const cards     = cardRefs.current;
-      const infos     = infoRefs.current;
-      const imgs      = imgRefs.current;
+      const cards = cardRefs.current;
+      const infos = infoRefs.current;
+      const imgs = imgRefs.current;
       const heroSteps = stepRefs.current;
-      const dots      = dotRefs.current;
-      const gallery   = galleryRef.current;
-      const stageEl   = stageRef.current;
-      const spacerEl  = spacerRef.current;
+      const gallery = galleryRef.current;
+      const stageEl = stageRef.current;
+      const spacerEl = spacerRef.current;
       const stageHero = heroRef.current;
-      const hint      = hintRef.current;
-      const pBar      = pBarRef.current;
-      const flash     = flashRef.current;
-      const phLabel   = phLabelRef.current;
+      const hint = hintRef.current;
+      const pBar = pBarRef.current;
+      const flash = flashRef.current;
 
-      if (!gallery || !stageEl || !spacerEl || !stageHero || !hint || !pBar || !flash || !phLabel) return;
+      if (!gallery || !stageEl || !spacerEl || !stageHero || !hint || !pBar || !flash) return;
       if (cards.some(c => !c) || imgs.some(img => !img)) return;
 
       /* ── SCATTER POSITIONS ── */
@@ -220,7 +213,7 @@ export default function SeedCompanySection() {
           { leftFrac: 0.460, topFrac: 0.710 },
         ].map(({ leftFrac, topFrac }) => ({
           left: Math.min(VW * leftFrac, VW - tW - 20),
-          top:  Math.min(VH * topFrac,  VH - tH - 20),
+          top: Math.min(VH * topFrac, VH - tH - 20),
           w: tW,
           h: tH,
         }));
@@ -233,7 +226,7 @@ export default function SeedCompanySection() {
       let rafId: number | null = null;
 
       const onMM2 = (e: MouseEvent) => {
-        mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
         mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
       };
       document.addEventListener("mousemove", onMM2);
@@ -266,24 +259,21 @@ export default function SeedCompanySection() {
       function buildLayout() {
         const VW = window.innerWidth;
         const VH = window.innerHeight;
-        const tW       = Math.max(120, Math.min(Math.round(VW * 0.155), 200));
-        const tH       = Math.round(tW * 0.66);
-        const CARD_W   = VW * 0.8;
-        const CARD_H   = VH * 0.65;
+        const tW = Math.max(120, Math.min(Math.round(VW * 0.155), 200));
+        const tH = Math.round(tW * 0.66);
+        const CARD_W = VW * 0.8;
+        const CARD_H = VH * 0.65;
         const CARD_GAP = VH * 0.2;
         const stackLeft = (VW - CARD_W) / 2;
         const STACK_TOP = (VH - CARD_H) / 2;
-        const cardTop   = (i: number) => STACK_TOP + i * (CARD_H + CARD_GAP);
-        const panAmt    = (N - 1) * (CARD_H + CARD_GAP);
+        const cardTop = (i: number) => STACK_TOP + i * (CARD_H + CARD_GAP);
+        const panAmt = (N - 1) * (CARD_H + CARD_GAP);
         const scattered = getScattered(VW, VH, tW, tH);
         basePos = scattered.map(s => ({ left: s.left, top: s.top }));
         const snapPoints = Array.from({ length: N }, (_, i) =>
           0.5 + (i / (N - 1)) * 0.5
         );
 
-        // ── KEY FIX: give the spacer div exactly the scroll height GSAP needs.
-        // This ensures the page has enough room for the full 9×VH animation
-        // regardless of what other sections exist above/below in your React app.
         const scrollDist = VH * 9;
         spacerEl.style.height = `${VH + scrollDist}px`;
 
@@ -295,7 +285,7 @@ export default function SeedCompanySection() {
         scrollPhase = progress;
         const panProgress = Math.max(0, (progress - 0.5) / 0.5);
 
-        pBar.style.width  = progress * 100 + "%";
+        pBar.style.width = progress * 100 + "%";
         hint.style.opacity = progress < 0.04 ? "1" : "0";
 
         gsap.set(stageHero, {
@@ -305,8 +295,6 @@ export default function SeedCompanySection() {
 
         const idx = Math.min(N - 1, Math.round(panProgress * (N - 1)));
         if (idx !== lastActive) {
-          dots.forEach((d, j)  => d?.classList.toggle("active", j === idx));
-          phLabel.textContent  = STEPS[idx].phase;
           heroSteps.forEach((s, j) => s?.classList.toggle("active", j === idx));
           lastActive = idx;
           if (progress > 0.5) {
@@ -318,9 +306,9 @@ export default function SeedCompanySection() {
         if (progress < 0.45) {
           cards.forEach((card, i) => {
             if (!card) return;
-            gsap.set(card,     { scale: 1, opacity: 1 });
+            gsap.set(card, { scale: 1, opacity: 1 });
             gsap.set(infos[i], { opacity: 0, y: 0 });
-            gsap.set(imgs[i],  { yPercent: -10 });
+            gsap.set(imgs[i], { yPercent: -10 });
           });
           return;
         }
@@ -329,15 +317,15 @@ export default function SeedCompanySection() {
         const galY = gsap.getProperty(gallery, "y") as number;
         cards.forEach((card, i) => {
           if (!card) return;
-          const cardCentre  = L.cardTop(i) + L.CARD_H / 2 + galY;
-          const normDist    = (cardCentre - L.VH / 2) / L.VH;
-          const absDist     = Math.abs(normDist);
+          const cardCentre = L.cardTop(i) + L.CARD_H / 2 + galY;
+          const normDist = (cardCentre - L.VH / 2) / L.VH;
+          const absDist = Math.abs(normDist);
           const scaleFactor = 1 - 0.2 * Math.min(absDist / 0.5, 1);
           const cardOpacity = Math.max(0, 1 - absDist * 2.0);
           gsap.set(card, { scale: scaleFactor, opacity: cardOpacity });
           const textOpacity = Math.max(0, 1 - absDist * 3);
           gsap.set(infos[i], { opacity: textOpacity, y: normDist * -20 });
-          gsap.set(imgs[i],  { yPercent: normDist * 20 - 10 });
+          gsap.set(imgs[i], { yPercent: normDist * 20 - 10 });
         });
       }
 
@@ -356,22 +344,20 @@ export default function SeedCompanySection() {
           const s = L.scattered[i];
           gsap.set(card, {
             left: s.left, top: s.top,
-            width: s.w,   height: s.h,
+            width: s.w, height: s.h,
             borderRadius: 6, zIndex: i + 1,
             x: 0, y: 0, opacity: 1,
             clearProps: "boxShadow",
           });
           card.classList.remove("sc-expanded");
           gsap.set(infos[i], { opacity: 0, y: 12 });
-          gsap.set(imgs[i],  { yPercent: -10 });
+          gsap.set(imgs[i], { yPercent: -10 });
         });
-        gsap.set(gallery,   { y: 0 });
+        gsap.set(gallery, { y: 0 });
         gsap.set(stageHero, { opacity: 1, y: 0 });
 
-        /* Timeline */
         tl = gsap.timeline({ defaults: { overwrite: "auto" } });
 
-        /* Phase 1 (0→1): scatter → stack */
         cards.forEach((card, i) => {
           if (!card) return;
           const s = L.scattered[i];
@@ -380,7 +366,7 @@ export default function SeedCompanySection() {
             { left: s.left, top: s.top, width: s.w, height: s.h, borderRadius: 6, x: 0, y: 0, scale: 1, opacity: 1 },
             {
               left: L.stackLeft, top: L.cardTop(i),
-              width: L.CARD_W,   height: L.CARD_H,
+              width: L.CARD_W, height: L.CARD_H,
               borderRadius: 12, x: 0, y: 0, scale: 1, opacity: 1,
               ease: "power3.inOut", duration: 1, overwrite: "auto",
               onUpdate() {
@@ -392,7 +378,6 @@ export default function SeedCompanySection() {
           );
         });
 
-        /* Phase 2 (1→2): pan gallery upward */
         tl.fromTo(
           gallery,
           { y: 0 },
@@ -400,24 +385,15 @@ export default function SeedCompanySection() {
           1
         );
 
-        /* ── THE CORE HEIGHT FIX ──
-           trigger  = spacerEl  → ScrollTrigger watches the spacer's scroll position.
-                                   The spacer has explicit height (VH + 9×VH) so
-                                   the browser always allocates the full scroll range.
-           pin      = stageEl   → The visible stage gets pinned (stays on screen).
-           pinSpacing: false    → Don't let GSAP insert its own spacer div — we
-                                   already have one. Without this, GSAP doubles the
-                                   scroll height and the section ends at the wrong time.
-        ── */
         st = ScrollTrigger.create({
-          trigger:    spacerEl,
-          start:      "top top",
-          end:        `+=${L.scrollDist}`,
-          pin:        stageEl,
+          trigger: spacerEl,
+          start: "top top",
+          end: `+=${L.scrollDist}`,
+          pin: stageEl,
           pinSpacing: false,
-          scrub:      0.8,
-          animation:  tl,
-          anticipatePin:       1,
+          scrub: 0.8,
+          animation: tl,
+          anticipatePin: 1,
           invalidateOnRefresh: true,
           snap: {
             snapTo(value: number) {
@@ -439,19 +415,6 @@ export default function SeedCompanySection() {
         startParallaxLoop();
       }
 
-      /* ── DOT NAV ── */
-      dots.forEach((dot, i) => {
-        if (!dot) return;
-        const onClick = () => {
-          if (!st) return;
-          const tp = 0.5 + (i / (N - 1)) * 0.5;
-          window.scrollTo({ top: st.start + tp * (st.end - st.start), behavior: "smooth" });
-        };
-        dot.addEventListener("click", onClick);
-        disposers.push(() => dot.removeEventListener("click", onClick));
-      });
-
-      /* ── RESIZE ── */
       let resizeTimer: ReturnType<typeof setTimeout> | null = null;
       const onResize = () => {
         if (resizeTimer) clearTimeout(resizeTimer);
@@ -486,109 +449,84 @@ export default function SeedCompanySection() {
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
       {/* Cursor */}
-      <div id="sc-cursor"      ref={cursorRef} />
-      <div id="sc-cursor-ring" ref={ringRef}   />
+      <div id="sc-cursor" ref={cursorRef} />
+      <div id="sc-cursor-ring" ref={ringRef} />
 
       {/* Fixed overlays */}
-      <div id="sc-flash"    ref={flashRef} />
-      <div id="sc-progress" ref={pBarRef}  />
+      <div id="sc-flash" ref={flashRef} />
+      <div id="sc-progress" ref={pBarRef} />
 
       {/* Scroll hint */}
-      <div id="sc-hint" ref={hintRef}>
+      <div id="sc-hint" ref={hintRef} >
         <div className="sc-hint-line" />
-        <span>Scroll</span>
+        <span></span>
       </div>
 
-      {/* Top nav */}
-      <nav id="sc-nav">
-        <div className="sc-nav-logo">SeedCraft Labs</div>
-        <div className="sc-nav-right">
-          <div className="sc-nav-phase">
-            <span ref={phLabelRef}>Explore</span> our seed journey
-          </div>
-          <div className="sc-nav-lines"><i /><i /><i /></div>
-        </div>
-      </nav>
-
-      {/* Dot nav */}
-      <div id="sc-dotnav">
-        {STEPS.map((_, i) => (
-          <div
-            key={i}
-            className={"sc-dot" + (i === 0 ? " active" : "")}
-            ref={el => { dotRefs.current[i] = el; }}
-          />
-        ))}
-      </div>
-
-      {/* ── SCROLL SPACER: reserves exact scroll height for GSAP pin ── */}
-      {/* ── DESKTOP STAGE ── */}
+      {/* ── SCROLL SPACER ── */}
       <div id="sc-spacer" ref={spacerRef}>
-      <div id="sc-stage" ref={stageRef}>
-
-        {/* Left hero panel */}
-        <div id="sc-hero" ref={heroRef}>
-          <div className="sc-hero-eyebrow">Our Process</div>
-          <div className="sc-hero-title">
-            From Lab<br />to <em>Your</em><br />Farm.
+        <div id="sc-stage" ref={stageRef}>
+          {/* Left hero panel */}
+          <div id="sc-hero" ref={heroRef}>
+            <div className="sc-hero-eyebrow">Our Process</div>
+            <div className="sc-hero-title">
+              From Lab<br />to <em>Your</em><br />Farm.
+            </div>
+            <p className="sc-hero-desc">
+              Every seed we deliver has passed through five rigorous steps — ensuring
+              the crop you grow is the strongest it can be.
+            </p>
+            <div className="sc-hero-steps">
+              {STEPS.map((s, i) => (
+                <div
+                  key={s.n}
+                  className={"sc-hero-step" + (i === 0 ? " active" : "")}
+                  data-n={s.n}
+                  ref={el => { stepRefs.current[i] = el; }}
+                >
+                  {s.label}
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="sc-hero-desc">
-            Every seed we deliver has passed through five rigorous steps — ensuring
-            the crop you grow is the strongest it can be.
-          </p>
-          <div className="sc-hero-steps">
-            {STEPS.map((s, i) => (
+
+          {/* Gallery — cards positioned by GSAP */}
+          <div id="sc-gallery" ref={galleryRef}>
+            {CARDS_DATA.map((c, i) => (
               <div
-                key={s.n}
-                className={"sc-hero-step" + (i === 0 ? " active" : "")}
-                data-n={s.n}
-                ref={el => { stepRefs.current[i] = el; }}
+                key={c.id}
+                className="sc-card"
+                ref={el => { cardRefs.current[i] = el; }}
               >
-                {s.label}
+                <div className="sc-card-imgwrap">
+                  <img
+                    src={c.img}
+                    alt={c.tag}
+                    ref={el => { imgRefs.current[i] = el; }}
+                  />
+                </div>
+
+                <div
+                  className="sc-card-info"
+                  ref={el => { infoRefs.current[i] = el; }}
+                >
+                  <div className="sc-card-eyebrow">{c.tag}</div>
+                  <div className="sc-card-title">
+                    <em>{c.em}</em>
+                    {c.h1}<br />{c.h2}
+                  </div>
+                  <div className="sc-card-bottom">
+                    <p className="sc-card-desc">{c.desc}</p>
+                    <div className="sc-card-stat">
+                      <strong>{c.stat}</strong>
+                      <span>{c.statLabel}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
-
-        {/* Gallery — cards positioned by GSAP */}
-        <div id="sc-gallery" ref={galleryRef}>
-          {CARDS_DATA.map((c, i) => (
-            <div
-              key={c.id}
-              className="sc-card"
-              ref={el => { cardRefs.current[i] = el; }}
-            >
-              {/* Oversized image wrapper for parallax headroom */}
-              <div className="sc-card-imgwrap">
-                <img
-                  src={c.img}
-                  alt={c.tag}
-                  ref={el => { imgRefs.current[i] = el; }}
-                />
-              </div>
-
-              <div
-                className="sc-card-info"
-                ref={el => { infoRefs.current[i] = el; }}
-              >
-                <div className="sc-card-eyebrow">{c.tag}</div>
-                <div className="sc-card-title">
-                  <em>{c.em}</em>
-                  {c.h1}<br />{c.h2}
-                </div>
-                <div className="sc-card-bottom">
-                  <p className="sc-card-desc">{c.desc}</p>
-                  <div className="sc-card-stat">
-                    <strong>{c.stat}</strong>
-                    <span>{c.statLabel}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
-      </div>{/* /sc-spacer */}
 
       {/* After section */}
       <div id="sc-after">
@@ -633,16 +571,16 @@ export default function SeedCompanySection() {
 }
 
 /* ─────────────────────────────────────────
-   STYLES
+   STYLES (removed nav & dotnav rules)
 ───────────────────────────────────────── */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
 :root {
-  --sc-accent: #c8f000;
-  --sc-bg:     #151412;
-  --sc-text:   #f0ede6;
-  --sc-muted:  rgba(240,237,230,0.42);
+  --sc-accent: #77ff00ff;
+  --sc-bg:     #ffffffff;
+  --sc-text:   #000000ff;
+  --sc-muted:  rgba(0, 0, 0, 0.42);
 }
 
 /* ── CURSOR ── */
@@ -660,29 +598,6 @@ const CSS = `
   pointer-events: none; z-index: 8998;
   transform: translate(-50%,-50%); will-change: left, top;
 }
-
-/* ── NAV ── */
-#sc-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 700;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: clamp(1rem,2.5vw,1.8rem) clamp(1.2rem,4vw,3rem);
-  pointer-events: none; font-family: 'DM Sans', sans-serif;
-}
-.sc-nav-logo {
-  font-size: clamp(8px,1vw,10px); letter-spacing: .22em;
-  text-transform: uppercase; color: rgba(240,237,230,.55);
-}
-.sc-nav-right { display: flex; align-items: center; gap: clamp(1rem,2.5vw,2.5rem); }
-.sc-nav-phase {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(10px,1.2vw,12px); font-style: italic; color: var(--sc-muted);
-}
-.sc-nav-phase span { color: var(--sc-accent); font-style: normal; }
-.sc-nav-lines { display: flex; flex-direction: column; gap: 5px; }
-.sc-nav-lines i { display: block; height: 1px; background: rgba(240,237,230,.35); }
-.sc-nav-lines i:nth-child(1) { width: 22px; }
-.sc-nav-lines i:nth-child(2) { width: 14px; }
-.sc-nav-lines i:nth-child(3) { width: 22px; }
 
 /* ── PROGRESS BAR ── */
 #sc-progress {
@@ -711,34 +626,16 @@ const CSS = `
   100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
 }
 
-/* ── DOT NAV ── */
-#sc-dotnav {
-  position: fixed; right: clamp(1rem,2.5vw,2.2rem); top: 50%;
-  transform: translateY(-50%); z-index: 700;
-  display: flex; flex-direction: column; gap: 14px;
-}
-.sc-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  border: 1px solid rgba(240,237,230,.3);
-  background: transparent; cursor: pointer;
-  transition: all .4s cubic-bezier(.22,1,.36,1);
-}
-.sc-dot.active { background: var(--sc-accent); border-color: var(--sc-accent); transform: scale(1.5); }
-
 /* ── FLASH ── */
 #sc-flash {
   position: fixed; inset: 0; z-index: 600;
   background: var(--sc-bg); opacity: 0; pointer-events: none;
 }
 
-/* ── SCROLL SPACER ──
-   Reserves the full scroll height (100vh stage + 9×VH animation).
-   Height is also set dynamically in JS on init/resize.
-   pinSpacing:false on ScrollTrigger means GSAP won't add its own spacer.
-── */
+/* ── SCROLL SPACER ── */
 #sc-spacer {
   position: relative;
-  height: 1000vh;   /* fallback before JS runs: 100vh + 9×100vh */
+  height: 1000vh;
   width: 100%;
 }
 
@@ -795,15 +692,10 @@ const CSS = `
 .sc-hero-step.active { color: rgba(240,237,230,.75); }
 .sc-hero-step.active::before { opacity: 1; }
 
-/* ── GALLERY ──
-   FIX: overflow must be visible so cards that start outside the stage
-   boundary during the scatter phase are not clipped.
-   GSAP positions them via absolute left/top, so we need the gallery
-   itself to not clip its children.
-── */
+/* ── GALLERY ── */
 #sc-gallery {
   position: absolute; inset: 0;
-  overflow: visible;       /* ← was missing; cards outside stage were invisible */
+  overflow: visible;
   pointer-events: none;
   z-index: 1;
 }
@@ -816,25 +708,23 @@ const CSS = `
   transform: translateZ(0);
 }
 
-/* ── IMAGE WRAPPER — 120% tall for parallax headroom ── */
 .sc-card-imgwrap {
   position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%;     /* matches card */
-  overflow: hidden;              /* clips the oversized img to the card */
+  width: 100%; height: 100%;
+  overflow: hidden;
   will-change: transform;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
 }
 .sc-card-imgwrap img {
   width: 100%;
-  height: 120%;                  /* extra 20% gives parallax room */
+  height: 120%;
   object-fit: cover; display: block;
   pointer-events: none; user-select: none;
   will-change: transform;
-  transform: translate3d(0, -10%, 0);   /* GPU start position */
+  transform: translate3d(0, -10%, 0);
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
 }
 
-/* ── VIGNETTE ── */
 .sc-card::after {
   content: ''; position: absolute; inset: 0; z-index: 1;
   background:
@@ -844,7 +734,6 @@ const CSS = `
 }
 .sc-card.sc-expanded::after { opacity: 1; }
 
-/* ── CARD INFO ── */
 .sc-card-info {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
   padding: clamp(1.2rem,3vw,2.8rem) clamp(1.4rem,3.5vw,3.2rem) clamp(1rem,2.5vw,2.4rem);
@@ -921,8 +810,7 @@ const CSS = `
 
 @media (max-width: 768px) {
   body { cursor: auto; }
-  #sc-cursor, #sc-cursor-ring, #sc-dotnav,
-  #sc-hint, #sc-flash, #sc-progress, #sc-nav { display: none; }
+  #sc-cursor, #sc-cursor-ring, #sc-hint, #sc-flash, #sc-progress { display: none; }
   #sc-spacer, #sc-stage, #sc-after { display: none; }
   #sc-mobile { display: block; background: var(--sc-bg); }
 

@@ -2,7 +2,22 @@ import { useEffect } from "react";
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    // If already loaded into window, resolve immediately
+    if (src.includes("gsap.min") && (window as any).gsap) return resolve();
+    if (src.includes("ScrollTrigger") && (window as any).ScrollTrigger) return resolve();
+
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      // Tag exists but globals not ready yet — poll until they appear
+      const interval = setInterval(() => {
+        if (src.includes("gsap.min") && (window as any).gsap) { clearInterval(interval); resolve(); }
+        if (src.includes("ScrollTrigger") && (window as any).ScrollTrigger) { clearInterval(interval); resolve(); }
+      }, 20);
+      existing.addEventListener("error", () => { clearInterval(interval); reject(); });
+      return;
+    }
+
+    // Fresh inject
     const s = document.createElement("script");
     s.src = src;
     s.async = false;
