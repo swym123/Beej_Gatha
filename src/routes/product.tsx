@@ -162,13 +162,13 @@ function ProductPage() {
               </button>
             ))}
           </div>
-          <input
+          {/* <input
             className="pd-search"
             type="search"
             placeholder="Search by name or code…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-          />
+          /> */}
         </div>
 
         {/* Product Grid */}
