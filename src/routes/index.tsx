@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Loader from "../components/Loader";
 
 import ScrollVideoSection from "../components/ScrollVideoSection";
+import YoutubeSection from "../components/YoutubeSection";
 import SeedCompanySection from "../components/SeedCompanySection";
 import ScientistsSection from "../components/ScientistsSection";
 import MissionSection from "../components/MissionSection";
@@ -43,13 +44,13 @@ function Home() {
       <Loader />
       <div id="pbar" />
       <Navbar />
-  
       <ScrollVideoSection />
+      <YoutubeSection />
       <SeedCompanySection />
       <ScientistsSection />
       <MissionSection />
       <EnergySection />
-      <Footer/>
+      <Footer />
     </div>
   );
 }

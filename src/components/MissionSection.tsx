@@ -49,7 +49,7 @@ const css = `
 .ms-head h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(2rem,5vw,3.5rem); margin: 0; line-height: 1.1; color: #0d1208; }
 .ms-mission { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 4rem; }
 @media (max-width: 760px) { .ms-mission { grid-template-columns: 1fr; } }
-.ms-mission > div { padding: 2.5rem; background: #fff; border-left: 3px solid #8cc63f; }
+.ms-mission > div { padding: 2.5rem; background: #fff; border-left: 3px solid #8cc63f; border-radius: 0; }
 .ms-mission h3 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 1.8rem; margin: 0 0 1rem; color: #0d1208; }
 .ms-mission p { font-size: 1rem; line-height: 1.8; color: #5a4f3e; margin: 0; }
 .ms-values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }

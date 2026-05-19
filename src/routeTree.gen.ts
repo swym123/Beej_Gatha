@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProductRouteImport } from './routes/product'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as PolicyRouteImport } from './routes/policy'
 import { Route as MissionRouteImport } from './routes/mission'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -20,6 +21,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const ProductRoute = ProductRouteImport.update({
   id: '/product',
   path: '/product',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PolicyRoute = PolicyRouteImport.update({
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/mission': typeof MissionRoute
   '/policy': typeof PolicyRoute
   '/product': typeof ProductRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/mission': typeof MissionRoute
   '/policy': typeof PolicyRoute
   '/product': typeof ProductRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,12 +88,13 @@ export interface FileRoutesById {
   '/mission': typeof MissionRoute
   '/policy': typeof PolicyRoute
   '/product': typeof ProductRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/careers' | '/contact' | '/mission' | '/policy' | '/product'
+  fullPaths: '/' | '/about' | '/careers' | '/contact' | '/mission' | '/policy' | '/product' | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/careers' | '/contact' | '/mission' | '/policy' | '/product'
+  to: '/' | '/about' | '/careers' | '/contact' | '/mission' | '/policy' | '/product' | '/product/$id'
   id:
     | '__root__'
     | '/'
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
     | '/mission'
     | '/policy'
     | '/product'
+    | '/product/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -105,6 +115,7 @@ export interface RootRouteChildren {
   MissionRoute: typeof MissionRoute
   PolicyRoute: typeof PolicyRoute
   ProductRoute: typeof ProductRoute
+  ProductIdRoute: typeof ProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -114,6 +125,13 @@ declare module '@tanstack/react-router' {
       path: '/product'
       fullPath: '/product'
       preLoaderRoute: typeof ProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/policy': {
@@ -169,6 +187,7 @@ const rootRouteChildren: RootRouteChildren = {
   MissionRoute: MissionRoute,
   PolicyRoute: PolicyRoute,
   ProductRoute: ProductRoute,
+  ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

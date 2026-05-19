@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
+import logo from "../assets/beej-gatha-logo.png";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  
+
   const isHome = location.pathname === "/";
 
   useEffect(() => {
@@ -24,14 +25,15 @@ export default function Navbar() {
 
       <header className={"nav " + (applyScrolledStyle ? "nav-scrolled" : "")}>
         <Link to="/" className="nav-logo" onClick={() => setOpen(false)}>
-          Seed<span>Craft</span>
+          <img src={logo} alt="Beej Gatha" />
+          Beej<span>Gatha</span>
         </Link>
 
         <nav className={"nav-links " + (open ? "open" : "")}>
           <Link to="/" onClick={() => setOpen(false)}>
             Home
           </Link>
-           <Link to="/product" onClick={() => setOpen(false)}>
+          <Link to="/product" onClick={() => setOpen(false)}>
             Product
           </Link>
           <Link to="/about" onClick={() => setOpen(false)}>
@@ -75,37 +77,48 @@ const css = `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem clamp(2rem, 5vw, 4rem);
+  padding: 0.8rem clamp(1.5rem, 5vw, 3rem);
   font-family: 'Inter', 'DM Sans', sans-serif;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
 }
 
 .nav-scrolled {
-  top: 20px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 1200px;
-  background: rgba(18, 18, 18, 0.7);
+  width: calc(100% - 100px);
+  background: rgba(18, 18, 18, 0.45);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  padding: 0.8rem 2rem;
+  padding: 0.6 rem 1.2rem;
   border-radius: 100px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .nav-logo {
   font-family: 'Outfit', 'Playfair Display', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #ffffff;
   text-decoration: none;
   letter-spacing: -0.03em;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+}
+
+.nav-logo img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #8cc63f;
+  transition: transform 0.25s ease;
+}
+
+.nav-logo:hover img {
+  transform: scale(1.05);
 }
 
 .nav-logo span {
@@ -118,7 +131,7 @@ const css = `
 
 .nav-links {
   display: flex;
-  gap: 2.5rem;
+  gap: 1.8rem;
   align-items: center;
 }
 
@@ -126,12 +139,12 @@ const css = `
   position: relative;
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: capitalize;
   transition: color 0.3s ease;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
 }
 
 .nav-links a::after {
@@ -207,7 +220,6 @@ const css = `
     visibility: hidden;
     transform: translateY(-20px) scale(0.95);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
   }
 
   .nav-links.open {

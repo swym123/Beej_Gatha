@@ -1,8 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { sharedHeadLinks } from "../components/SiteHead";
+import "./product.css";
 
 export const Route = createFileRoute("/product")({
   component: ProductPage,
@@ -17,15 +18,23 @@ export const Route = createFileRoute("/product")({
   }),
 });
 
-const PRODUCTS = [
+export const PRODUCTS = [
   {
     id: 1, category: "Cereal",
     name: "BG Gold Wheat", code: "BGW-204",
     tag: "Best Seller",
     icon: "🌾",
     img: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&q=80",
+    photos: [
+      "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&q=80",
+      "https://images.unsplash.com/photo-1586771107584-568c569f64bd?w=800&q=80",
+      "https://images.unsplash.com/photo-1592982537447-6f2a6a0c5c37?w=800&q=80",
+      "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80"
+    ],
     yield: "52–58 q/ha", maturity: "115–120 days", resistance: "Rust, Blight",
+    season: "Rabi (Winter)", spacing: "20-22 cm row-to-row",
     desc: "High-yield wheat bred for North Indian plains. Exceptional grain size, strong straw, and outstanding rust resistance.",
+    fullDesc: "BG Gold Wheat is the result of over a decade of selective breeding to withstand the unique climatic pressures of the North Indian plains. It boasts an exceptional tillering capacity, meaning each plant produces more grain-bearing heads. The sturdy straw prevents lodging even in high winds, ensuring your crop stays standing until harvest. Its robust genetic profile provides excellent natural resistance to common rust and blight, reducing the need for chemical interventions. Farmers consistently report premium market prices due to its bold, lustrous grains.",
     badge: "green",
   },
   {
@@ -118,13 +127,25 @@ function ProductPage() {
 
   const filtered = PRODUCTS.filter((p) => {
     const matchCat = active === "All" || p.category === active;
-    const matchQ = query === "" || p.name.toLowerCase().includes(query.toLowerCase()) || p.code.toLowerCase().includes(query.toLowerCase());
+
+    // Convert everything to a string safely and check for nulls
+    const name = String(p.name || "").toLowerCase();
+    const code = String(p.code || "").toLowerCase();
+    const desc = String(p.desc || "").toLowerCase();
+    const searchTerm = query.toLowerCase();
+
+    const matchQ =
+      query === "" ||
+      name.includes(searchTerm) ||
+      code.includes(searchTerm) ||
+      desc.includes(searchTerm);
+
     return matchCat && matchQ;
   });
 
   return (
     <>
-      <style>{css}</style>
+
       <Navbar />
       <main className="pd-page">
 
@@ -156,7 +177,7 @@ function ProductPage() {
             <div className="pd-empty">No products match your search.</div>
           )}
           {filtered.map((p) => (
-            <article key={p.id} className="pd-card">
+            <Link to="/product/$id" params={{ id: p.id.toString() }} key={p.id} className="pd-card">
               <div className="pd-card-img" style={{ backgroundImage: `url('${p.img}')` }}>
                 <span className={"pd-tag pd-tag-" + p.badge}>{p.tag}</span>
               </div>
@@ -182,7 +203,7 @@ function ProductPage() {
                   </div>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
 
@@ -191,43 +212,3 @@ function ProductPage() {
     </>
   );
 }
-
-const css = `
-.pd-page { background: #f5f0e8; color: #0d1208; font-family: 'DM Sans', sans-serif; padding-top: 80px; min-height: 100vh; }
-
-
-
-/* Toolbar */
-.pd-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1200px; margin: 0 auto; padding: 0 clamp(1.5rem,4vw,3rem) 2rem; }
-.pd-cats { display: flex; flex-wrap: wrap; gap: .6rem; }
-.pd-cat-btn { padding: .5rem 1.2rem; border: 1px solid #d4c9b5; border-radius: 100px; background: #fff; color: #5a4f3e; font-size: .85rem; cursor: pointer; transition: all .25s; font-family: 'DM Sans', sans-serif; }
-.pd-cat-btn:hover { border-color: #8cc63f; color: #3d6b2f; }
-.pd-cat-btn.active { background: #8cc63f; border-color: #8cc63f; color: #fff; font-weight: 600; }
-.pd-search { padding: .55rem 1.1rem; border: 1px solid #d4c9b5; border-radius: 100px; background: #fff; color: #0d1208; font-size: .88rem; width: 240px; font-family: 'DM Sans', sans-serif; outline: none; transition: border-color .25s; }
-.pd-search:focus { border-color: #8cc63f; }
-
-/* Grid */
-.pd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 0 clamp(1.5rem,4vw,3rem) clamp(4rem,8vw,6rem); }
-@media (max-width: 1000px) { .pd-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px)  { .pd-grid { grid-template-columns: 1fr; } }
-.pd-empty { grid-column: 1/-1; text-align: center; padding: 4rem; color: #8c7e6a; font-size: 1.1rem; }
-
-/* Card */
-.pd-card { background: #fff; border: 1px solid #e8dcc8; border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; transition: transform .3s, box-shadow .3s; }
-.pd-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,.1); }
-.pd-card-img { height: 200px; background-size: cover; background-position: center; position: relative; }
-.pd-tag { position: absolute; top: 12px; left: 12px; font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: .3rem .75rem; border-radius: 100px; }
-.pd-tag-green  { background: #dcfce7; color: #166534; }
-.pd-tag-blue   { background: #dbeafe; color: #1e40af; }
-.pd-tag-amber  { background: #fef3c7; color: #92400e; }
-.pd-card-body { padding: 1.75rem; display: flex; flex-direction: column; flex: 1; }
-.pd-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem; }
-.pd-cat-pill { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; background: #f5f0e8; color: #3d6b2f; padding: .25rem .65rem; border-radius: 100px; border: 1px solid #d4c9b5; }
-.pd-code { font-size: .75rem; color: #8c7e6a; letter-spacing: .08em; }
-.pd-card h2 { font-family: 'Playfair Display', serif; font-weight: 400; font-size: 1.3rem; margin: 0 0 .75rem; color: #0d1208; }
-.pd-card-desc { font-size: .9rem; line-height: 1.7; color: #5a4f3e; margin: 0 0 1.25rem; flex: 1; }
-.pd-specs { display: flex; flex-direction: column; gap: .45rem; border-top: 1px solid #f0e8d8; padding-top: 1rem; }
-.pd-spec { display: flex; justify-content: space-between; align-items: baseline; }
-.pd-spec-label { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: #8c7e6a; }
-.pd-spec-val { font-size: .85rem; color: #0d1208; font-weight: 500; text-align: right; max-width: 60%; }
-`;

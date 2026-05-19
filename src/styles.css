@@ -152,3 +152,38 @@ body,
     color: var(--color-foreground);
   }
 }
+
+/* ── GLOBAL CUSTOM CURSOR ── */
+#glb-cursor {
+  position: fixed;
+  width: 9px;
+  height: 9px;
+  background: #3d6b2f;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1), height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  mix-blend-mode: difference;
+  will-change: left, top;
+}
+
+#glb-cursor-ring {
+  position: fixed;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(140, 198, 63, 0.35);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999998;
+  transform: translate(-50%, -50%);
+  will-change: left, top;
+  transition: border-color 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+/* Hide default system cursor everywhere (except on mobile) */
+@media (min-width: 769px) {
+  *, body, html, a, button, input, select, textarea, [role="button"] {
+    cursor: none !important;
+  }
+}
